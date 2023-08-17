@@ -3,8 +3,10 @@
 /// <summary>
 /// 基础事件
 /// </summary>
-public class BaseEvent
-{ 
+public class BaseNode
+{
+    static int EMBEDDING_SIZE = 1536;
+
     [JsonProperty(PropertyName = "subject")]
     public string Subject { get; set; }
 
@@ -17,28 +19,39 @@ public class BaseEvent
     [JsonProperty(PropertyName = "timeStamp")]
     public string TimeStamp { get; set; }
 
-    public BaseEvent(string subject, string predicate, string object_, string timeStamp)
+    [JsonProperty(PropertyName = "embedding")]
+    public int[] Embedding;
+
+    public BaseNode()
+    {
+
+    }
+
+    public BaseNode(string subject, string predicate, string object_, string timeStamp)
     {
         Subject = subject;
         Predicate = predicate;
         Object = object_;
         TimeStamp = timeStamp;
+        Embedding = new int[EMBEDDING_SIZE];
     }
 
-    public BaseEvent(string subject, string predicate, string object_)
+    public BaseNode(string subject, string predicate, string object_)
     {
         Subject = subject;
         Predicate = predicate;
         Object = object_;
         TimeStamp = System.DateTime.Now.ToString();
+        Embedding = new int[EMBEDDING_SIZE];
     }
 
-    public BaseEvent(string subject, string predicate)
+    public BaseNode(string subject, string predicate)
     {
         Subject = subject;
         Predicate = predicate;
         Object = "";
         TimeStamp = System.DateTime.Now.ToString();
+        Embedding = new int[EMBEDDING_SIZE];
     }
 
     public override string ToString()
