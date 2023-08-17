@@ -18,9 +18,14 @@ public class Persona : MonoBehaviour, ICognition
 
 
     #region ICognition Implements
-    public void Perceive()
+    /// <summary>
+    /// 感知周围环境，获得信息列表
+    /// </summary>
+    /// <returns></returns>
+    public List<BaseNode> Perceive()
     {
-
+        // TODO
+        return new List<BaseNode>();
     }
 
     public void Retrieve()
@@ -38,9 +43,14 @@ public class Persona : MonoBehaviour, ICognition
 
     }
 
-    public void Reflect()
+    /// <summary>
+    /// 将相关信息抽象成新的记忆
+    /// </summary>
+    /// <param name="perceivedNodes"></param>
+    /// <returns></returns>
+    public MemoryNode Reflect(List<BaseNode> perceivedNodes)
     {
-
+        return new MemoryNode();
     }
     #endregion
 
