@@ -1,7 +1,9 @@
 ﻿
+using System.Collections.Generic;
+
 public interface ICognition
 {
-    void Perceive();
+    List<BaseNode> Perceive();
 
     /// <summary>
     /// 检索自己的记忆
@@ -21,8 +23,6 @@ public interface ICognition
     /// <summary>
     /// 将已有记忆再抽象提炼成高阶记忆
     /// </summary>
-    void Reflect();
-
-
+    MemoryNode Reflect(List<BaseNode> perceivedNodes);
 
 }
