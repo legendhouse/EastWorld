@@ -1,0 +1,26 @@
+{
+    "Hugo Lee": {
+        "Hugo Lee": null,
+        "Winifred Kwok": "Hugo Lee and Winifred are boyfriend and girlfriend.",
+        "Kobe Bryant": "Hugo Lee is a big fan of Kobe Bryant.",
+        "Jack Wu": "Jack Wu is a good colleague."
+    },
+    "Winifred Kwok": {
+        "Hugo Lee": "Hugo Lee and Winifred are boyfriend and girlfriend.",
+        "Winifred Kwok": null,
+        "Kobe Bryant": "Strangers.",
+        "Jack Wu": "I don't know much about her."
+    },
+    "Kobe Bryant": {
+        "Hugo Lee": "Hugo Lee is a big fan of Kobe Bryant.",
+        "Winifred Kwok": "Strangers.",
+        "Kobe Bryant": null,
+        "Jack Wu": "Strangers."
+    },
+    "Jack Wu": {
+        "Hugo Lee": "Hugo Lee and Jack Wu are colleagues.",
+        "Winifred Kwok": "I don't know much about her.",
+        "Kobe Bryant": "Strangers.",
+        "Jack Wu": null
+    }
+}
