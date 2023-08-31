@@ -13,7 +13,7 @@ public class AgentManager : MonoBehaviour
     public static AgentManager Instance { get; private set; }
     public static string agentInfoDir;
     public static string agentMemoryDir;
-    public List<Agent> agents = new List<Agent>();
+    public Dictionary<string, Agent> agentDict = new Dictionary<string, Agent>();
 
     private void Awake()
     {
@@ -35,31 +35,29 @@ public class AgentManager : MonoBehaviour
 
     void Start()
     {
-        agentInfoDir = "";
+        agentInfoDir = "AgentProfiles";
         agentMemoryDir = "";
+        LoadAllAgents();
     }
 
     /// <summary>
-    /// TODO!!!!!!!!!!!!!!!!!!!!
+    /// 从Resources/AgentProfiles下加载所有agent
     /// </summary>
     void LoadAllAgents()
     {
-        TextAsset[] textAssets = Resources.LoadAll<TextAsset>("PathToYourJSONFiles");
+        TextAsset[] textAssets = Resources.LoadAll<TextAsset>(agentInfoDir);
 
         foreach (TextAsset textAsset in textAssets)
         {
             if (textAsset.name.StartsWith("agent_"))
             {
                 AgentInfo agentInfo = JsonConvert.DeserializeObject<AgentInfo>(textAsset.text);
-                Agent agent = JsonUtility.FromJson<Agent>(textAsset.text);
-                agents.Add(agent);
+                Agent agent = new GameObject(agentInfo.FullName).AddComponent<Agent>();
+                agent.agentInfo = agentInfo;
+                agentDict[agentInfo.FullName] = agent;
+                Debug.Log(agent);
             }
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }
