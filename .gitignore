@@ -1,1 +1,7 @@
 *.meta
+/Library
+/.vs
+/Packages
+/ProjectSettings
+/Temp
+/UserSettings
