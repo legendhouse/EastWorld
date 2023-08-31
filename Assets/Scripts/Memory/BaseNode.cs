@@ -5,7 +5,6 @@
 /// </summary>
 public class BaseNode
 {
-    static int EMBEDDING_SIZE = 1536;
 
     [JsonProperty(PropertyName = "subject")]
     public string Subject { get; set; }
@@ -20,7 +19,7 @@ public class BaseNode
     public string TimeStamp { get; set; }
 
     [JsonProperty(PropertyName = "embedding")]
-    public int[] Embedding;
+    public Embedding NodeEmbedding;
 
     public BaseNode()
     {
@@ -33,7 +32,6 @@ public class BaseNode
         Predicate = predicate;
         Object = object_;
         TimeStamp = timeStamp;
-        Embedding = new int[EMBEDDING_SIZE];
     }
 
     public BaseNode(string subject, string predicate, string object_)
@@ -42,7 +40,6 @@ public class BaseNode
         Predicate = predicate;
         Object = object_;
         TimeStamp = System.DateTime.Now.ToString();
-        Embedding = new int[EMBEDDING_SIZE];
     }
 
     public BaseNode(string subject, string predicate)
@@ -51,7 +48,6 @@ public class BaseNode
         Predicate = predicate;
         Object = "";
         TimeStamp = System.DateTime.Now.ToString();
-        Embedding = new int[EMBEDDING_SIZE];
     }
 
     public override string ToString()
