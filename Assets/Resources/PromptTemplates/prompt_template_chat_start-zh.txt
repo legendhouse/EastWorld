@@ -1,0 +1,24 @@
+请根据以下剧本介绍，补全对话内容，只需要补全{npcSelf}对{npcOther}说的话，不要有多余文字。
+------
+背景：
+{npcSelf}看见了{npcOther}, 上前跟他/她开始对话。
+
+当前时间：
+- {time}
+
+人物信息：
+- {npcSelf}: {npcInfoSelf}
+- {npcOther}: {npcInfoOther}
+
+关系：
+- {relation}
+
+印象：
+- {npcSelf}对{npcOther}的印象: {impressionSelf}
+- {npcOther}对{npcSelf}的印象: {impressionOther}
+
+对话地点：
+- {locationName}
+
+对话：
+- {npcSelf}: 
