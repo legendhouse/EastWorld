@@ -31,24 +31,6 @@ public class OpenAiApi : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-
-        UnitTest();
-    }
-
-    void UnitTest()
-    {
-        Debug.Log("===========开始单元测试===========");
-        List<Message> messages = new List<Message>()
-        {
-            new SystemMessage("你是一个中文对话AI，无论对方说什么，请用中文回复"),
-            new UserMessage("hi, how are you?")
-        };
-        CallChat(messages, null);
-        CallEmbedding("用户旅程");
-    }
-
     /// <summary>
     /// 调用聊天的接口
     /// </summary>

@@ -8,12 +8,7 @@ public class Agent : MonoBehaviour, INotifiable
 {
     public AgentInfo agentInfo;
     Queue<CoroutineTask> todoTasks = new Queue<CoroutineTask>();
-
     int counter = 0;
-
-    /// <summary>
-    /// 是否被对话等行为占用
-    /// </summary>
     public bool IsOccupied { get; private set; } = false;
 
     #region MonoBehaviour
@@ -108,10 +103,23 @@ public class Agent : MonoBehaviour, INotifiable
     /// <summary>
     /// 与其他人物进行对话，需要以协程IEnumerator的方式实现
     /// </summary>
+    public IEnumerator Converse(Agent other)
+    {
+        Debug.Log(new AssistantMessage($"Hi！这是一条开启对话的打桩数据！{other.ToString()}"));
+        yield return new WaitForSeconds(1f);
+    }
+
     public IEnumerator Converse()
     {
-        Debug.Log(new AssistantMessage("Hi！这是一条打桩数据！"));
+        Debug.Log(new AssistantMessage("Hi！这是一条开启对话的打桩数据！"));
         yield return new WaitForSeconds(1f);
+    }
+
+
+    public IEnumerable Converse(Agent other, Message replyMessage)
+    {
+        Debug.Log(new AssistantMessage("Hi！这是一条回复的打桩数据！"));
+        yield return new WaitForSeconds(0.1f);
     }
 
     /// <summary>

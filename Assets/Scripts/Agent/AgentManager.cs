@@ -17,10 +17,10 @@ public class AgentManager : MonoBehaviour
 
     private void Awake()
     {
-        CreateOrGetSingleton();
+        Initialize();
     }
 
-    private void CreateOrGetSingleton()
+    private void Initialize()
     {
         if (Instance == null)
         {
@@ -35,7 +35,7 @@ public class AgentManager : MonoBehaviour
 
     void Start()
     {
-        agentInfoDir = "AgentProfiles";
+        agentInfoDir = "AgentProfiles/en";
         agentMemoryDir = "";
         LoadAllAgents();
     }

@@ -36,7 +36,7 @@ public class Scheduler : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            if (LoadFromResources())
+            if (Load())
             {
                 Debug.Log($"Existing scheduler: {currentTime}");
                 NotifyAll();
@@ -49,7 +49,7 @@ public class Scheduler : MonoBehaviour
                 Debug.Log($"New scheduler: {currentTime}");
                 // test save
                 IncrementTime();
-                SaveToResources();
+                Save();
             }
         }
         else if (Instance != this)
@@ -88,7 +88,7 @@ public class Scheduler : MonoBehaviour
     /// <summary>
     /// 保存到Resources
     /// </summary>
-    public void SaveToResources()
+    public void Save()
     {
         SchedulerData data = new SchedulerData();
         data.currentTime = currentTime;
@@ -103,7 +103,7 @@ public class Scheduler : MonoBehaviour
     /// 从Resources加载
     /// </summary>
     /// <returns></returns>
-    public bool LoadFromResources()
+    public bool Load()
     {
         string path = Path.Combine(Application.dataPath, "Resources", resourcePath);
         if (File.Exists(path))
@@ -120,76 +120,10 @@ public class Scheduler : MonoBehaviour
         }
     }
 
-    #region 协程执行、注册、添加和删除功能
+
+    #region 注册及广播机制，用于将被调度对象（Agent）注册到Scheduler，一般每个对象只需要注册一次
     /// <summary>
-    /// 注册一个新的 CoroutineTask 以供执行。
-    /// </summary>
-    /// <param name="task">包含协程和可选完成回调的 CoroutineTask 对象。</param>
-    // 注册一个新的 CoroutineTask
-    public void RegisterCoroutineTask(CoroutineTask task)
-    {
-        taskQueue.Enqueue(task);
-        runningCoroutinesCount++;
-        Debug.Log($"新携程任务已添加！当前待执行任务数量：{runningCoroutinesCount}");
-    }
-
-    /// <summary>
-    /// 开始执行所有排定的协程
-    /// </summary>
-    public void RunScheduledCoroutines()
-    {
-        Debug.Log("AAAAAAAAAAAAA");
-        StartCoroutine(RunAllScheduledCoroutines());
-    }
-
-    /// <summary>
-    /// 实际用于执行所有排定的协程的协程
-    /// </summary>
-    /// <returns></returns>    
-    private IEnumerator RunAllScheduledCoroutines()
-    {
-        yield return new WaitForSeconds(1.5f);
-        while (taskQueue.Count > 0)
-        {
-            var task = taskQueue.Dequeue();
-            Debug.Log($"当前剩余任务数： {taskQueue.Count}");
-            yield return StartCoroutine(RunAndTrackCoroutine(task));
-            Debug.Log(taskQueue.Count);
-        }
-    }
-
-    /// <summary>
-    /// 执行并跟踪给定的 CoroutineTask。
-    /// </summary>
-    /// <param name="task">需要执行和跟踪的 CoroutineTask 对象。</param>
-    /// <returns>IEnumerator 用于 Unity 协程。</returns>
-    private IEnumerator RunAndTrackCoroutine(CoroutineTask task)
-    {
-        yield return StartCoroutine(task.Coroutine);
-        Debug.Log($"携程数量: {runningCoroutinesCount}");
-        runningCoroutinesCount--;
-        task.OnCompletion?.Invoke();  // 如果提供了完成回调，则调用
-
-        CheckAllCoroutinesCompleted();
-    }
-
-    /// <summary>
-    /// 检查所有已注册的协程是否已完成。如果是，则触发 OnAllCoroutinesCompleted 事件并调用 IncrementTime 方法。
-    /// </summary>
-    private void CheckAllCoroutinesCompleted()
-    {
-        if (runningCoroutinesCount == 0)
-        {
-            OnAllCoroutinesCompleted?.Invoke();
-            IncrementTime();
-        }
-    }
-    #endregion
-
-
-    #region 注册及广播机制
-    /// <summary>
-    /// 允许对象注册以接收时间点通知
+    /// 注册对象以接收时间点通知
     /// </summary>
     /// <param name="obj"></param>
     public void RegisterNotifiableObject(INotifiable obj)
@@ -217,6 +151,72 @@ public class Scheduler : MonoBehaviour
             obj.OnTimePointReached();
             Debug.Log($"通知所有注册的对象执行任务，当前时间: {currentTime}");
             yield return new WaitForSeconds(1.0f);  // 等待一秒
+        }
+    }
+    #endregion
+
+
+
+    #region 任务注册、执行机制，用于执行被调度对象注册到Scheduler中的任务，每个新的时间点，对象会根据Plan注册新任务
+    /// <summary>
+    /// 注册一个新的 CoroutineTask 以供执行。
+    /// </summary>
+    /// <param name="task">包含协程和可选完成回调的 CoroutineTask 对象。</param>
+    // 注册一个新的 CoroutineTask
+    public void RegisterCoroutineTask(CoroutineTask task)
+    {
+        taskQueue.Enqueue(task);
+        runningCoroutinesCount++;
+        Debug.Log($"新携程任务已添加！当前待执行任务数量：{runningCoroutinesCount}");
+    }
+
+    /// <summary>
+    /// 开始执行所有排定的协程
+    /// </summary>
+    public void RunScheduledCoroutines()
+    {
+        StartCoroutine(RunAllScheduledCoroutines());
+    }
+
+    /// <summary>
+    /// 实际用于执行所有排定的协程的协程
+    /// </summary>
+    /// <returns></returns>    
+    private IEnumerator RunAllScheduledCoroutines()
+    {
+        yield return new WaitForSeconds(1.5f);
+        while (taskQueue.Count > 0)
+        {
+            var task = taskQueue.Dequeue();
+            Debug.Log($"当前剩余任务数： {taskQueue.Count}");
+            yield return StartCoroutine(RunAndTrackCoroutine(task));
+        }
+    }
+
+    /// <summary>
+    /// 执行并跟踪给定的 CoroutineTask。
+    /// </summary>
+    /// <param name="task">需要执行和跟踪的 CoroutineTask 对象。</param>
+    /// <returns>IEnumerator 用于 Unity 协程。</returns>
+    private IEnumerator RunAndTrackCoroutine(CoroutineTask task)
+    {
+        yield return StartCoroutine(task.Coroutine);
+        Debug.Log($"携程数量: {runningCoroutinesCount}");
+        runningCoroutinesCount--;
+        task.OnCompletion?.Invoke();  // 如果提供了完成回调，则调用
+
+        CheckAllCoroutinesCompleted();
+    }
+
+    /// <summary>
+    /// 检查所有已注册的协程是否已完成。如果是，则触发 OnAllCoroutinesCompleted 事件并调用 IncrementTime 方法。
+    /// </summary>
+    private void CheckAllCoroutinesCompleted()
+    {
+        if (runningCoroutinesCount == 0)
+        {
+            OnAllCoroutinesCompleted?.Invoke();
+            IncrementTime();
         }
     }
     #endregion
