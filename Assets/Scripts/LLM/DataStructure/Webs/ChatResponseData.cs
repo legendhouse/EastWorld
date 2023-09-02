@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 
 [System.Serializable]
-public class ResponseData
+public class ChatResponseData
 {
     public List<Choice> choices;
 }
@@ -9,14 +9,7 @@ public class ResponseData
 [System.Serializable]
 public class Choice
 {
-    public MessageData message;
+    public Message message;
     public string finish_reason;
     public int index;
-}
-
-[System.Serializable]
-public class MessageData
-{
-    public string role;
-    public string content;
 }

@@ -1,0 +1,15 @@
+*.meta
+/Library
+/.vs
+/Packages
+/ProjectSettings
+/Temp
+/UserSettings
+/AutoInstaller.Editor.csproj
+/EastWorld.sln
+/EastWorld.zip
+/packages.config
+/Assembly-CSharp.csproj
+/Assembly-CSharp-Editor.csproj
+/Assets/Cainos
+/Assets/Resources/Configs/OpenAiConfig.json

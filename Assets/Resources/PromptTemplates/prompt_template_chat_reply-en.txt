@@ -1,0 +1,25 @@
+Please complete the dialog based on the following script. Only fill in what {npcOther} says to {npcSelf}. Do not include any extra text.
+------
+Background:
+{npcSelf} sees {npcOther} and initiates a conversation. {npcOther} responds to {npcSelf}.
+
+Current Time:
+- {time}
+
+Character Information:
+- {npcSelf}: {npcInfoSelf}
+- {npcOther}: {npcInfoOther}
+
+Relation:
+- {relation}
+
+Impressions:
+- {npcSelf}'s impression of {npcOther}: {impressionSelf}
+- {npcOther}'s impression of {npcSelf}: {impressionOther}
+
+Dialogue Location:
+- {locationName}
+
+Dialogue:
+{npcSelf}: {content}
+{npcOther}: 
