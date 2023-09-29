@@ -22,12 +22,12 @@ public class AgentManager : MonoBehaviour, IManager
 
     public void Refresh()
     {
-        throw new System.NotImplementedException();
+        throw new System.NotImplementedException(); // TODO
     }
 
     public void Terminate()
     {
-        throw new System.NotImplementedException();
+        throw new System.NotImplementedException(); // TODO
     }
 
     public void Initialize()
