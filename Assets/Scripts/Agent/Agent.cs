@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,7 +31,7 @@ public class Agent : MonoBehaviour
 
     void Start()
     {
-        Plan();
+
     }
 
     /// <summary>
@@ -54,14 +54,67 @@ public class Agent : MonoBehaviour
     }
 
     /// <summary>
-    /// 以当前时间为起点，做一个计划表格
-    /// 简易起见，
+    /// 外部接口，负责解析基本类型到枚举类、时间类等
     /// </summary>
-    public void Plan()
+    /// <param name="taskTypeString"></param>
+    /// <param name="dateTimeString"></param>
+    /// <param name="taskParams"></param>
+    public void Plan(string taskTypeString, string dateTimeString, Dictionary<string, string> taskParams)
     {
-        CoroutineTask task = new CoroutineTask(Converse());
-        todoTasks.Enqueue(task);
+        bool isTaskTypeVald = Enum.TryParse(taskTypeString, out TaskType taskType);
+        if (!isTaskTypeVald)
+        {
+            Debug.LogWarning($"任务类型无法解析：{taskTypeString}");
+            return;
+        }
+        bool isTimeValid = DateTime.TryParse(dateTimeString, out DateTime dateTime);
+        if (isTimeValid)
+        {
+            Plan(taskType, dateTime, taskParams);
+        }
+        else
+        {
+            Debug.LogWarning($"时间无法解析: {dateTimeString}");
+        }
     }
+
+    /// <summary>
+    /// 内部实现 TODO
+    /// </summary>
+    public void Plan(TaskType taskType, DateTime dateTime, Dictionary<string, string> taskParams)
+    {
+        switch (taskType)
+        {
+            case TaskType.CHAT:
+                CoroutineTask task = new CoroutineTask(Converse(), dateTime);
+                todoTasks.Enqueue(task);
+                break;
+            case TaskType.MOVE:
+                Debug.Log("计划：移动");
+                break;
+            case TaskType.REFLECT:
+                Debug.Log("计划：回忆");
+                break;
+            case TaskType.WAIT:
+                Debug.Log("计划：等待");
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 通过合适的prompt与gpt交互，获得当天计划表，并提取出结构化数据
+    /// </summary>
+    public void DailyPlan()
+    {
+
+    }
+
+    public void HourlyPlan()
+    {
+
+    }
+
+
 
     /// <summary>
     /// 抽象的执行方法，可以是计划表中的看书、散步等，也可以是根据当前环境状态，与邻近NPC对话
@@ -77,8 +130,9 @@ public class Agent : MonoBehaviour
             yield return 1; // 等待1帧
         }
         yield return new WaitForSeconds(1f);
-
     }
+
+
 
     /// <summary>
     /// 将相关信息抽象成新的记忆

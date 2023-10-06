@@ -1,4 +1,8 @@
 ﻿using Newtonsoft.Json;
+
+/// <summary>
+/// agent基本信息
+/// </summary>
 public class AgentInfo
 {
     [JsonProperty(PropertyName = "innate")]
