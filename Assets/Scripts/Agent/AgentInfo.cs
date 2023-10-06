@@ -13,4 +13,10 @@ public class AgentInfo
     public string FirstName { get; private set; }
     [JsonProperty(PropertyName = "lastName")]
     public string LastName { get; private set; }
+
+    
+    public override string ToString()
+    {
+        return string.Format("\n========Agent Profile========\n- name:\t{0}\n- innate:\t{1}", FullName, Innate);
+    }
 }

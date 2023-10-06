@@ -104,9 +104,19 @@ public class Agent : MonoBehaviour
     /// <summary>
     /// 通过合适的prompt与gpt交互，获得当天计划表，并提取出结构化数据
     /// </summary>
-    public void DailyPlan()
+    public IEnumerator DailyPlan()
     {
-
+        // step1 从llm获取计划，原始为字符串
+        Dictionary<string, object> args = new Dictionary<string, object>();
+        DateTime dateTime = DateTime.Now;
+        int taskNum = UnityEngine.Random.Range(5, 10 + 1);
+        args.Add("time", dateTime);
+        args.Add("taskNum", taskNum);
+        args.Add("npcDetailedInfo", ToString());    // TODO 换成详细的info
+        string prompt = PromptBuilder.Build("prompt_template_daily_plan-zh.txt", args);
+        string planString = "";
+        yield return OpenAiApi.Instance.Chat(new UserMessage(prompt), (result) => {planString = result.content; });
+        // step2 将plan字符串转为结构化的数据形式 TODO
     }
 
     public void HourlyPlan()
@@ -122,7 +132,7 @@ public class Agent : MonoBehaviour
     public IEnumerator Excecute()
     {
         // 执行本agent待执行任务队列
-        foreach(var task in todoTasks)
+        foreach (var task in todoTasks)
         {
             task.OnStart?.Invoke();
             yield return StartCoroutine(task.Coroutine);
