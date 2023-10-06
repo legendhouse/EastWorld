@@ -14,3 +14,5 @@
 /Assets/Cainos
 /Assets/Resources/Configs/OpenAiConfig.json
 /obj
+/Logs
+/.gitattributes

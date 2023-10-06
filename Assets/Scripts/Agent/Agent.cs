@@ -4,27 +4,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Agent : MonoBehaviour, INotifiable
+public class Agent : MonoBehaviour
 {
     public AgentInfo agentInfo;
     Queue<CoroutineTask> todoTasks = new Queue<CoroutineTask>();
     int counter = 0;
     public bool IsOccupied { get; private set; } = false;
 
-    #region MonoBehaviour
-    void Start()
+    #region IO
+    /// <summary>
+    /// 保存任务当前状态(序列化)
+    /// </summary>
+    public void Save()
     {
-        Scheduler.Instance.RegisterNotifiableObject(this);
-        Plan();
+
     }
 
-    void Update()
+    /// <summary>
+    /// 加载人物状态(反序列化)
+    /// </summary>
+    public void Load()
     {
 
     }
     #endregion
 
-
+    void Start()
+    {
+        Plan();
+    }
 
     /// <summary>
     /// 感知周围环境，获得信息列表
@@ -46,13 +54,12 @@ public class Agent : MonoBehaviour, INotifiable
     }
 
     /// <summary>
-    /// 以半小时为时间步，添加一个计划
-    /// 不一定每个时间点都要有计划，无计划的时间点，可以自由选择Move或Converse
+    /// 以当前时间为起点，做一个计划表格
+    /// 简易起见，
     /// </summary>
     public void Plan()
     {
         CoroutineTask task = new CoroutineTask(Converse());
-        Scheduler.Instance.RegisterCoroutineTask(task);
         todoTasks.Enqueue(task);
     }
 
@@ -64,7 +71,10 @@ public class Agent : MonoBehaviour, INotifiable
         // 执行本agent待执行任务队列
         foreach(var task in todoTasks)
         {
-            
+            task.OnStart?.Invoke();
+            yield return StartCoroutine(task.Coroutine);
+            task.OnCompletion?.Invoke();
+            yield return 1; // 等待1帧
         }
         yield return new WaitForSeconds(1f);
 
@@ -81,23 +91,7 @@ public class Agent : MonoBehaviour, INotifiable
     }
 
 
-    #region IO
-    /// <summary>
-    /// 保存任务当前状态(序列化)
-    /// </summary>
-    public void Save()
-    {
 
-    }
-
-    /// <summary>
-    /// 加载人物状态(反序列化)
-    /// </summary>
-    public void Load()
-    {
-
-    }
-    #endregion
 
     #region Action
     /// <summary>
@@ -134,12 +128,5 @@ public class Agent : MonoBehaviour, INotifiable
     public override string ToString()
     {
         return string.Format("\n========Agent Profile========\n-name: {0}\n-innate: {1}", agentInfo.FullName, agentInfo.Innate);
-    }
-
-    public void OnTimePointReached()
-    {
-        // TODO
-        Debug.Log($"+++++++++++++{agentInfo.FirstName}的人物执行完成! {++counter}+++++++++++++" + ToString());
-        Plan();
     }
 }

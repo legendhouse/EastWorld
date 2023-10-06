@@ -52,7 +52,7 @@ public class BaseNode
 
     public override string ToString()
     {
-        if (Object != null)
+        if (Object!=null)
             return string.Format("{0} {1} {2}", Subject, Predicate, Object);
         else
             return string.Format("{0} {1}", Subject, Predicate);

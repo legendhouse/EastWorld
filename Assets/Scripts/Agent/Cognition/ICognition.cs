@@ -4,7 +4,7 @@ using System.Collections.Generic;
 /// <summary>
 /// 认知模块
 /// 
-/// 涉及跟LLM交互的方法，由于有一定交互时间，均使用携程；其余接口为普通的void即可
+/// 涉及跟LLM交互的方法，由于有一定交互时间，均使用协程；其余接口为普通的void即可
 /// </summary>
 public interface ICognition
 {
